@@ -1,62 +1,97 @@
 import json
 from abc import ABC
 
-import requests
+
+class MakeVacancies:
+    def __init__(self, name: str, platform: str, url: str, city, pay: dict = None, requirement: str = "Не указано",
+                 value: str = "Не указано"):
+        self.name = name
+        self.platform = platform
+        self.url = url
+        self.city = city
+        self.salary = pay["from"] if isinstance(pay, dict) else "Не указана"
+        self.requirement = requirement
+        self.value = f"{value['currency']}" if isinstance(pay, dict) else "Не указана"
+
+    @staticmethod
+    def get_vacancies_from_file():
+        items = []
+        with open("text.json", "r", encoding="utf-8") as f:
+            json_file = json.load(f)
+            for item in json_file["items"]:
+                items.append(MakeVacancies(
+                    item["name"],
+                    "HeadHunter",
+                    item["alternate_url"],
+                    item["area"]["name"],
+                    item["salary"],
+                    item["snippet"]["requirement"],
+                    item["salary"]
+
+                ))
+        return items
+
+    def __repr__(self):
+        return f"{self.name}\n" \
+               f"Зарплата: От {self.salary}\n" \
+               f"{self.requirement}\n" \
+               f"{self.url}"
+
+    def __ge__(self, other):
+        """
+        Метод сравнения зарплат
+        """
+        return int(
+            self.salary[3:]
+        ) >= int(
+            other.salary[3:]
+        ) if isinstance(
+            self.salary, str
+        ) and isinstance(
+            other.salary, str
+        ) else "Зарплата одной из вакансий не указана"
 
 
 class Vacancies(ABC):
-    @classmethod
-    def make_vacancies(cls):
+    @staticmethod
+    def add_vacancies():
         pass
 
     @staticmethod
-    def get_json_to_file():
+    def del_vacancies():
+        pass
+
+    @staticmethod
+    def get_vacancies():
         pass
 
 
-class VacanciesAll(Vacancies):
-    def __init__(self, platform, name, pay, city, responsibility, url, requirement):
-        self.platform = platform
-        self.name = name
-        self.pay = f'От {pay["from"]}' if isinstance(pay, dict) else "Не указана"
-        self.city = city
-        self.responsibility = responsibility if isinstance(responsibility, str) else "Не указано"
-        self.url = url
-        self.requirement = requirement
-
-    def __repr__(self):
-        return f"{self.platform}: {self.url} : {self.pay}"
-
-    @classmethod
-    def make_vacancies(cls):
-        items = []
-        for item in json.loads(VacanciesAll.get_json_to_file_hh())["items"]:
-            items.append(
-                VacanciesAll(
-                    "HeadHunter",
-                    item["name"],
-                    item["salary"],
-                    item["area"]["name"],
-                    item["snippet"]["responsibility"],
-                    item["alternate_url"],
-                    item["snippet"]["requirement"]
-                )
-            )
-
-        return items
+class VacanciesJson(Vacancies):
+    @staticmethod
+    def add_vacancies():
+        vacancies_to_file = []
+        for el in MakeVacancies.get_vacancies_from_file():
+            vacancies_to_file.append({
+                "platform": el.platform,
+                "url": el.url,
+                "name": el.name,
+                "salary": el.salary,
+                "requirement": el.requirement,
+                "currency": el.value
+            })
+        with open("creepy.json", "w", encoding="utf-8") as file:
+            json.dump(vacancies_to_file, file)
 
     @staticmethod
-    def get_json_to_file_hh():
-        params = {
-            'per_page': 100  # Кол-во вакансий на 1 странице
-        }
+    def get_vacancies():
+        with open("creepy.json", "r", encoding="utf-8") as file:
+            template = json.load(file)
+        return template
 
-        req = requests.get('https://api.hh.ru/vacancies', params)  # Посылаем запрос к API
-        data = req.content.decode()  # Декодируем его ответ, чтобы Кириллица отображалась корректно
+    @staticmethod
+    def del_vacancies():
+        with open("creepy.json", "w", encoding="utf-8") as file:
+            json.dump([], file)
 
-        with open("text.json", "w") as f:
-            f.write(data)
 
-        req.close()
 
-        return data
