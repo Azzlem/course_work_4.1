@@ -3,10 +3,11 @@ from abc import ABC
 
 
 class MakeVacancies:
-    def __init__(self, name: str, platform: str, url: str, city, pay: dict = None, requirement: str = "Не указано",
+    def __init__(self, name: str, platform: str, responsibility: str, url: str, city, pay: dict = None, requirement: str = "Не указано",
                  value: str = "Не указано"):
         self.name = name
         self.platform = platform
+        self.responsibility = responsibility
         self.url = url
         self.city = city
         self.salary = pay["from"] if isinstance(pay, dict) else "Не указана"
@@ -16,19 +17,22 @@ class MakeVacancies:
     @staticmethod
     def get_vacancies_from_file():
         items = []
-        with open("text.json", "r", encoding="utf-8") as f:
-            json_file = json.load(f)
-            for item in json_file["items"]:
-                items.append(MakeVacancies(
-                    item["name"],
-                    "HeadHunter",
-                    item["alternate_url"],
-                    item["area"]["name"],
-                    item["salary"],
-                    item["snippet"]["requirement"],
-                    item["salary"]
+        for page in range(0, 20):
+            with open(f"{page}.json", "r", encoding="utf-8") as f:
+                json_file = json.load(f)
+                for item in json_file["items"]:
+                    items.append(MakeVacancies(
+                        item["name"],
+                        "HeadHunter",
+                        item["snippet"]["responsibility"],
+                        item["alternate_url"],
+                        item["area"]["name"],
+                        item["salary"],
+                        item["snippet"]["requirement"],
+                        item["salary"]
 
-                ))
+                    ))
+
         return items
 
     def __repr__(self):
@@ -77,7 +81,9 @@ class VacanciesJson(Vacancies):
                 "name": el.name,
                 "salary": el.salary,
                 "requirement": el.requirement,
-                "currency": el.value
+                "currency": el.value,
+                "city": el.city,
+                "responsibility": el.responsibility
             })
         with open("creepy.json", "w", encoding="utf-8") as file:
             json.dump(vacancies_to_file, file)
@@ -92,6 +98,3 @@ class VacanciesJson(Vacancies):
     def del_vacancies():
         with open("creepy.json", "w", encoding="utf-8") as file:
             json.dump([], file)
-
-
-
