@@ -33,7 +33,7 @@ while True:
                   f"Обязанности: {vacancy_city['responsibility']}\n"
                   f"Зарплата от: {vacancy_city['salary']}\n")
 
-        with open(f"../course_work_4.1/result_json/{city_user}{datetime.today()}.json", "w") as file:
+        with open(f"../course_work_4.1/{city_user}{datetime.today()}.json", "w") as file:
             json.dump(temp_list_city, file)
 
     elif command == "2":
@@ -49,7 +49,7 @@ while True:
                       f"Обязанности: {vacancy_salary['responsibility']}\n"
                       f"Зарплата от: {vacancy_salary['salary']}\n")
 
-            with open(f"../course_work_4.1/result_json/{user_salary}_{datetime.today()}.json", "w") as file:
+            with open(f"../course_work_4.1/{user_salary}_{datetime.today()}.json", "w") as file:
                 json.dump(temp_list_salary, file)
 
     elif command == "3":
@@ -62,7 +62,7 @@ while True:
                   f"Обязанности: {vacancy_word['responsibility']}\n"
                   f"Зарплата от: {vacancy_word['salary']}\n")
 
-        with open(f"../course_work_4.1/result_json/{user_word}{datetime.today()}.json", "w") as file:
+        with open(f"../course_work_4.1/{user_word}{datetime.today()}.json", "w") as file:
             json.dump(temp_list_word, file)
 
     elif command == "4":
@@ -80,7 +80,7 @@ while True:
                       f"Обязанности: {vacancy_mix_seach['responsibility']}\n"
                       f"Зарплата от: {vacancy_mix_seach['salary']}\n")
 
-            with open(f"../course_work_4.1/result_json/{city_user_input}_"
+            with open(f"../course_work_4.1/{city_user_input}_"
                       f"{user_word_input}_{user_salary_input}_{datetime.today()}.json", "w") as file:
                 json.dump(temp_list_result, file)
 
