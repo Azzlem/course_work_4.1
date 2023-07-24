@@ -1,0 +1,5 @@
+.idea
+.gitignore
+values.env
+tetstrtsr.py
+.json
