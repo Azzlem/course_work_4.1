@@ -126,3 +126,5 @@ class VacanciesJson(Vacancies):
     def del_vacancies():
         with open("vacancy.json", "w", encoding="utf-8") as file:
             pass
+
+    

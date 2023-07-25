@@ -26,6 +26,7 @@ while True:
     elif command == "1":
         city_user = input("Введите город: ").capitalize()
         temp_list_city = city(city_user)
+        
         for vacancy_city in temp_list_city:
             print(f"Вакансия\n"
                   f"Ссылка на вакансию: {vacancy_city['url']}\n"

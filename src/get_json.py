@@ -81,7 +81,7 @@ class GetJsonSJ(GetJson):
         :param page: номер страницы
         :return: результат парсинга
         """
-        api_key_js = dotenv_values("../course_work_4.1/values.env")["API_SJ"]
+        api_key_js = dotenv_values("values.env")["API_SJ"]
         headers = {
             "X-Api-App-Id": api_key_js,
         }
